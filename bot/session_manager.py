@@ -9,13 +9,11 @@ class Session(object):
     def __init__(self, session_id, system_prompt=None):
         self.session_id = session_id
         file_content = self.get_file_content()
-        system_prompt = "你是一个智能客服，旨在帮助用户解决相关问题。有人问你是谁的时候，请回答：我是智能客服，请问我能帮您做什么？" \
-                        f"你职责是根据一下内容回答用户问题：\n{file_content}\n。如果用户问题与文档内容相关，请直接使用文档内容回答。" \
-                        "如果用户问题与文档内容无关，请拒绝回答，并告诉用户：很抱歉，我无法回答这个问题。" \
-                        "有些回答后面包含查看图片xx.png，如果有，则务必也回复 查看图片xx.png，不要省略。" \
-                        "注意，你只能回答文档中有的内容，且所有回答尽可能简洁明了" \
-                        "文档中不存在的内容，请勿回答。以免误导用户" \
-                        "不要复述问题，直接回答即可"
+        system_prompt = "你是一个洗鞋柜系统的客服，你的用户都是系统的使用者。你的任务是根据【知识库】的内容来回答用户关于系统使用上的问题。" \
+                        f"你必须严格按照知识库:【{file_content}】中的内容来回答用户。" \
+                        "知识库中有的内容，你就用知识库中的内容来回答；知识库中没有的内容，你就仅回复用户：这个问题请联系@微存智能柜客服-3号" \
+                        "你的回复尽可能的精简，只用知识库中的内容来回答用户的问题。有些回答后面包含查看图片xx.png，如果有，则务必也回复查看图片xx.png，不要省略。" \
+                        "注意！不要对知识库中的内容进行任何修改和增加，以免给用户造成误导！也不要强行回答用户的问题，除非知识库中有明确的回答。" 
         self.messages = []
         if system_prompt is None:
             self.system_prompt = conf().get("character_desc", "")
@@ -23,7 +21,10 @@ class Session(object):
             self.system_prompt = system_prompt
     
     def get_file_content(self):
-        '''根据已上传的文件id获取文件内容。例如：1731393349_7cef88cf78b3471192fb808350831ce1'''
+        '''
+        根据已上传的文件id获取文件内容。例如：1731393349_7cef88cf78b3471192fb808350831ce1   
+        csv版本 ： 1731650803_f6e145b1565746bcbad3a31c04275a7c（效果不好）
+        '''
         zhipu_ai_api_key = conf().get("zhipu_ai_api_key")
         client = ZhipuAI(api_key=zhipu_ai_api_key)
         file_content = json.loads(client.files.content(file_id='1731393349_7cef88cf78b3471192fb808350831ce1').content)["content"]

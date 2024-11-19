@@ -116,6 +116,8 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
                 args = self.args
             # response = openai.ChatCompletion.create(api_key=api_key, messages=session.messages, **args)
             response = self.client.chat.completions.create(messages=session.messages, **args)
+            print("xxxxxxxxxxxxxmessagesxxxxxxxxxxxxx")
+            print(session.messages)
             # logger.debug("[ZHIPU_AI] response={}".format(response))
             # logger.info("[ZHIPU_AI] reply={}, total_tokens={}".format(response.choices[0]['message']['content'], response["usage"]["total_tokens"]))
 
@@ -126,25 +128,25 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
             }
         except Exception as e:
             need_retry = retry_count < 2
-            result = {"completion_tokens": 0, "content": "我现在有点累了，等会再来吧"}
+            result = {"completion_tokens": 0, "content": "不知道"}
             if isinstance(e, openai.error.RateLimitError):
                 logger.warn("[ZHIPU_AI] RateLimitError: {}".format(e))
-                result["content"] = "提问太快啦，请休息一下再问我吧"
+                result["content"] = "不知道"
                 if need_retry:
                     time.sleep(20)
             elif isinstance(e, openai.error.Timeout):
                 logger.warn("[ZHIPU_AI] Timeout: {}".format(e))
-                result["content"] = "我没有收到你的消息"
+                result["content"] = "不知道"
                 if need_retry:
                     time.sleep(5)
             elif isinstance(e, openai.error.APIError):
                 logger.warn("[ZHIPU_AI] Bad Gateway: {}".format(e))
-                result["content"] = "请再问我一次"
+                result["content"] = "不知道"
                 if need_retry:
                     time.sleep(10)
             elif isinstance(e, openai.error.APIConnectionError):
                 logger.warn("[ZHIPU_AI] APIConnectionError: {}".format(e))
-                result["content"] = "我连接不到你的网络"
+                result["content"] = "不知道"
                 if need_retry:
                     time.sleep(5)
             else:

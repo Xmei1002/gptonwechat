@@ -418,6 +418,6 @@ def separate_text_and_images(text):
     img_pattern = re.compile(r'\d+\.png')
     img_names = img_pattern.findall(text)
     
-    text_without_imgs = re.sub(r'。[^。]*?\b.*?\d+\.png\b(?:[^。]*?\b.*?\d+\.png\b)*[^。]*?', '', text)
+    text_without_imgs = re.sub(r'[。，\n][^。，\n]*?\b.*?\d+\.png\b(?:[^。]*?\b.*?\d+\.png\b)*[^。]*?', '', text)
     
     return text_without_imgs, img_names
