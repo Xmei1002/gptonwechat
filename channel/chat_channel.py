@@ -275,6 +275,7 @@ class ChatChannel(Channel):
         print('================================')
         print(reply.content)
         text, image = separate_text_and_images(reply.content)
+
         print("xxxxxxx",text,"xxxxxxxxxxxxx")
         print("xxxxxxx",image,"xxxxxxxxxxxxx")
         reply.content = text
@@ -285,7 +286,7 @@ class ChatChannel(Channel):
                     {"channel": self, "context": context, "reply": reply},
                 )
             )
-            reply = e_context["reply"]
+            reply = e_context["reply"]            
             if not e_context.is_pass() and reply and reply.type:
                 logger.debug("[chat_channel] ready to send reply: {}, context: {}".format(reply, context))
                 self._send(reply, context)
@@ -302,6 +303,15 @@ class ChatChannel(Channel):
                         print(reply_img)
                         print(context_img)
 
+                file_list = os.listdir('./files')
+                files =  process_files(file_list,text)
+                if files:
+                    for file in files:
+                        file = f'./files/{file}'
+                        reply.type = ReplyType.FILE
+                        reply.content = file
+                        self._send(reply, context)
+                    
     def _send(self, reply: Reply, context: Context, retry_cnt=0):
         try:
             self.send(reply, context)
@@ -418,6 +428,17 @@ def separate_text_and_images(text):
     img_pattern = re.compile(r'\d+\.png')
     img_names = img_pattern.findall(text)
     
-    text_without_imgs = re.sub(r'[。，\n][^。，\n]*?\b.*?\d+\.png\b(?:[^。]*?\b.*?\d+\.png\b)*[^。]*?', '', text)
-    
+    # text_without_imgs = re.sub(r'[。，][^。，]*?\b.*?\d+\.png\b(?:[^。]*?\b.*?\d+\.png\b)*[^。]*?', '', text)
+    pattern = r"参考示例.*"
+    text_without_imgs = re.sub(pattern, '', text)
     return text_without_imgs, img_names
+
+def process_files(file_list, text):
+    files = []
+    # 遍历文件名列表
+    for filename in file_list:
+        pattern = r'\b' + re.escape(filename) + r'\b'
+        if re.search(pattern, text):
+            files.append(filename)
+    return files
+        

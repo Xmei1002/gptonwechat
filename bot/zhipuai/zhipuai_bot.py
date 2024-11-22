@@ -128,25 +128,25 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
             }
         except Exception as e:
             need_retry = retry_count < 2
-            result = {"completion_tokens": 0, "content": "不知道"}
+            result = {"completion_tokens": 0, "content": "机器人故障，请稍后再试"}
             if isinstance(e, openai.error.RateLimitError):
                 logger.warn("[ZHIPU_AI] RateLimitError: {}".format(e))
-                result["content"] = "不知道"
+                result["content"] = "机器人故障，请稍后再试"
                 if need_retry:
                     time.sleep(20)
             elif isinstance(e, openai.error.Timeout):
                 logger.warn("[ZHIPU_AI] Timeout: {}".format(e))
-                result["content"] = "不知道"
+                result["content"] = "机器人故障，请稍后再试"
                 if need_retry:
                     time.sleep(5)
             elif isinstance(e, openai.error.APIError):
                 logger.warn("[ZHIPU_AI] Bad Gateway: {}".format(e))
-                result["content"] = "不知道"
+                result["content"] = "机器人故障，请稍后再试"
                 if need_retry:
                     time.sleep(10)
             elif isinstance(e, openai.error.APIConnectionError):
                 logger.warn("[ZHIPU_AI] APIConnectionError: {}".format(e))
-                result["content"] = "不知道"
+                result["content"] = "机器人故障，请稍后再试"
                 if need_retry:
                     time.sleep(5)
             else:
