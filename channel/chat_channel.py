@@ -274,11 +274,6 @@ class ChatChannel(Channel):
     def _send_reply(self, context: Context, reply: Reply):
         print('================================')
         print(reply.content)
-        text, image = separate_text_and_images(reply.content)
-
-        print("xxxxxxx",text,"xxxxxxxxxxxxx")
-        print("xxxxxxx",image,"xxxxxxxxxxxxx")
-        reply.content = text
         if reply and reply.type:
             e_context = PluginManager().emit_event(
                 EventContext(
@@ -290,21 +285,20 @@ class ChatChannel(Channel):
             if not e_context.is_pass() and reply and reply.type:
                 logger.debug("[chat_channel] ready to send reply: {}, context: {}".format(reply, context))
                 self._send(reply, context)
-                if image:
+                img_list = os.listdir('./images')
+                imgs = separate_text_and_images(img_list,reply.content)
+                if imgs:
                     reply_img = reply
                     context_img = context
-                    for img in image:
+                    for img in imgs:
                         img = f'./images/{img}'
                         reply_img.type = ReplyType.IMAGE
                         reply_img.content = img
                         context_img.type = ReplyType.IMAGE
                         self._send(reply_img, context_img)
-                        print('================================')
-                        print(reply_img)
-                        print(context_img)
 
                 file_list = os.listdir('./files')
-                files =  process_files(file_list,text)
+                files =  process_files(file_list,reply.content)
                 if files:
                     for file in files:
                         file = f'./files/{file}'
@@ -423,15 +417,14 @@ def check_contain(content, keyword_list):
             return True
     return None
 
-def separate_text_and_images(text):
-    # 提取以数字结尾的 XX.png 格式的图片名
-    img_pattern = re.compile(r'\d+\.png')
-    img_names = img_pattern.findall(text)
-    
-    # text_without_imgs = re.sub(r'[。，][^。，]*?\b.*?\d+\.png\b(?:[^。]*?\b.*?\d+\.png\b)*[^。]*?', '', text)
-    pattern = r"参考示例.*"
-    text_without_imgs = re.sub(pattern, '', text)
-    return text_without_imgs, img_names
+def separate_text_and_images(img_list,text):
+    imgs = []
+    # 遍历文件名列表
+    for img in img_list:
+        pattern = r'\b' + re.escape(img) + r'\b'
+        if re.search(pattern, text):
+            imgs.append(img)
+    return imgs
 
 def process_files(file_list, text):
     files = []
