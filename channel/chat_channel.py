@@ -421,8 +421,7 @@ def separate_text_and_images(img_list,text):
     imgs = []
     # 遍历文件名列表
     for img in img_list:
-        pattern = r'\b' + re.escape(img) + r'\b'
-        if re.search(pattern, text):
+        if img in text:
             imgs.append(img)
     return imgs
 
@@ -430,8 +429,7 @@ def process_files(file_list, text):
     files = []
     # 遍历文件名列表
     for filename in file_list:
-        pattern = r'\b' + re.escape(filename) + r'\b'
-        if re.search(pattern, text):
+        if filename in text:
             files.append(filename)
     return files
         
