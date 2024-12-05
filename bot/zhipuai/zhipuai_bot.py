@@ -116,7 +116,7 @@ class ZHIPUAIBot(Bot, ZhipuAIImage):
                 args = self.args
             # response = openai.ChatCompletion.create(api_key=api_key, messages=session.messages, **args)
             response = self.client.chat.completions.create(messages=session.messages, **args)
-            print("xxxxxxxxxxxxxmessagesxxxxxxxxxxxxx")
+            # print("xxxxxxxxxxxxxmessagesxxxxxxxxxxxxx")
             # logger.debug("[ZHIPU_AI] response={}".format(response))
             # logger.info("[ZHIPU_AI] reply={}, total_tokens={}".format(response.choices[0]['message']['content'], response["usage"]["total_tokens"]))
 
