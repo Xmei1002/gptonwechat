@@ -20,11 +20,11 @@ class Session(object):
         '''
         根据已上传的文件id获取文件内容。
         word格式： 1732238678_b1c0653faead42538b5b98cca4b707c4
-        md格式： 1733276052_7618bfb249f54c2faec9c372369e0317
+        md格式： 1734400648_1ff71bd26a864096b323019791973e79
         '''
         zhipu_ai_api_key = conf().get("zhipu_ai_api_key")
         client = ZhipuAI(api_key=zhipu_ai_api_key)
-        file_content = json.loads(client.files.content(file_id='1733276052_7618bfb249f54c2faec9c372369e0317').content)["content"]
+        file_content = json.loads(client.files.content(file_id='1734400648_1ff71bd26a864096b323019791973e79').content)["content"]
         return file_content
     
     # 重置会话
@@ -173,7 +173,8 @@ system_prompt_1 = '''
 4. 你的回答应当尽可能简洁，用简洁明了的语言回答用户问题。
 
 # 约束：
-  你只能回答知识库中已收录的问题，不能回答其他问题。如果用户问题无法在知识库中找到答案，就告知用户：抱歉，该问题请等待其他客服回答。
+1. 你只能回答知识库中已收录的问题，不能回答其他问题。如果用户问题无法在知识库中找到答案，就仅回复如下内容：抱歉，该问题请等待其他客服回答。
+2. 严格按照知识库回答，不要增加编造成分，以免误导用户，切记！
 '''
 
 
