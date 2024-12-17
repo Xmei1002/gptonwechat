@@ -107,6 +107,8 @@ class ChatChannel(Channel):
                         flag = True
                         if match_prefix:
                             content = content.replace(match_prefix, "", 1).strip()
+                        if match_contain:
+                            content = content.replace(match_contain, "", 1).strip()
                     if context["msg"].is_at:
                         nick_name = context["msg"].actual_user_nickname
                         if nick_name and nick_name in nick_name_black_list:
@@ -129,6 +131,7 @@ class ChatChannel(Channel):
                             pattern = f"@{re.escape(context['msg'].self_display_name)}(\u2005|\u0020)"
                             subtract_res = re.sub(pattern, r"", content)
                         content = subtract_res
+                        print("content", content)
                 if not flag:
                     if context["origin_ctype"] == ContextType.VOICE:
                         logger.info("[chat_channel]receive group voice, but checkprefix didn't match")
@@ -414,7 +417,7 @@ def check_contain(content, keyword_list):
         return None
     for ky in keyword_list:
         if content.find(ky) != -1:
-            return True
+            return ky
     return None
 
 def separate_text_and_images(img_list,text):
