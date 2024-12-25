@@ -305,8 +305,13 @@ class ChatChannel(Channel):
                 if files:
                     for file in files:
                         file = f'./files/{file}'
-                        reply.type = ReplyType.FILE
-                        reply.content = file
+                        if file.lower().endswith('.mp4'):
+                            # 如果是 MP4 文件，进行特殊处理
+                            reply.type = ReplyType.VIDEO  # 假设有一个 ReplyType.VIDEO 类型
+                            reply.content = file
+                        else:
+                            reply.type = ReplyType.FILE
+                            reply.content = file
                         self._send(reply, context)
                     
     def _send(self, reply: Reply, context: Context, retry_cnt=0):
