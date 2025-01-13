@@ -20,11 +20,11 @@ class Session(object):
         '''
         根据已上传的文件id获取文件内容。
         word格式： 1732238678_b1c0653faead42538b5b98cca4b707c4
-        md格式： 1735119941_36f334b7f385418f8086117ccfbf68e5
+        md格式： 1736731742_c0a3bfccc4f84418b99d4ee699fa0a87
         '''
         zhipu_ai_api_key = conf().get("zhipu_ai_api_key")
         client = ZhipuAI(api_key=zhipu_ai_api_key)
-        file_content = json.loads(client.files.content(file_id='1735119941_36f334b7f385418f8086117ccfbf68e5').content)["content"]
+        file_content = json.loads(client.files.content(file_id='1736731742_c0a3bfccc4f84418b99d4ee699fa0a87').content)["content"]
         return file_content
     
     # 重置会话
